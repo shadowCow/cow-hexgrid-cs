@@ -40,62 +40,123 @@ public class Hexgrid<T> where T : class
         };
     }
 
+    public T? GetTileAt(Coords coords)
+    {
+        return GetTileAt(coords.Q, coords.R);
+    }
+
     public T? GetNorthTile(int q, int r)
     {
-        return GetTileAt(q, r-1);
+        return GetTileAt(GetCoordsNorthOf(q, r));
     }
     
     public T? GetNorthwestTile(int q, int r)
     {
-        if (IsOdd(q))
-        {
-            return GetTileAt(q - 1, r);
-        }
-        else
-        {
-            return GetTileAt(q - 1, r - 1);
-        }
+        return GetTileAt(GetCoordsNorthwestOf(q, r));
     }
 
     public T? GetNortheastTile(int q, int r)
     {
-        if (IsOdd(q))
-        {
-            return GetTileAt(q + 1, r);
-        }
-        else
-        {
-            return GetTileAt(q + 1, r - 1);
-        }
+        return GetTileAt(GetCoordsNortheastOf(q, r));
     }
 
     public T? GetSouthTile(int q, int r)
     {
-        return GetTileAt(q, r+1);
+        return GetTileAt(GetCoordsSouthOf(q, r));
     }
 
     public T? GetSouthwestTile(int q, int r)
     {
-        if (IsOdd(q))
-        {
-            return GetTileAt(q - 1, r + 1);
-        }
-        else
-        {
-            return GetTileAt(q - 1, r);
-        }
+        return GetTileAt(GetCoordsSouthwestOf(q, r));
     }
 
     public T? GetSoutheastTile(int q, int r)
     {
+        return GetTileAt(GetCoordsSoutheastOf(q, r));
+    }
+
+    public Coords GetCoordsNorthOf(int q, int r)
+    {
+        return new Coords(q, r-1);
+    }
+
+    public Coords GetCoordsNorthwestOf(int q, int r)
+    {
         if (IsOdd(q))
         {
-            return GetTileAt(q + 1, r + 1);
+            return new Coords(q - 1, r);
         }
         else
         {
-            return GetTileAt(q + 1, r);
+            return new Coords(q - 1, r - 1);
         }
+    }
+
+    public Coords GetCoordsNortheastOf(int q, int r)
+    {
+        if (IsOdd(q))
+        {
+            return new(q + 1, r);
+        }
+        else
+        {
+            return new(q + 1, r - 1);
+        }
+    }
+
+    public Coords GetCoordsSouthOf(int q, int r)
+    {
+        return new(q, r + 1);
+    }
+
+    public Coords GetCoordsSouthwestOf(int q, int r)
+    {
+        if (IsOdd(q))
+        {
+            return new(q - 1, r + 1);
+        }
+        else
+        {
+            return new(q - 1, r);
+        }
+    }
+
+    public Coords GetCoordsSoutheastOf(int q, int r)
+    {
+        if (IsOdd(q))
+        {
+            return new(q + 1, r + 1);
+        }
+        else
+        {
+            return new(q + 1, r);
+        }
+    }
+
+    public bool AreNeighbors(Coords a, Coords b)
+    {
+        if (!IsValidCoord(a.Q, a.R) || !IsValidCoord(b.Q, b.R))
+        {
+            return false;
+        }
+        if (a == b)
+        {
+            return false;
+        }
+
+        var isNorthOf = b == GetCoordsNorthOf(a.Q, a.R);
+        var isNorthwestOf = b == GetCoordsNorthwestOf(a.Q, a.R);
+        var isNortheastOf = b == GetCoordsNortheastOf(a.Q, a.R);
+        var isSouthOf = b == GetCoordsSouthOf(a.Q, a.R);
+        var isSouthwestOf = b == GetCoordsSouthwestOf(a.Q, a.R);
+        var isSoutheastOf = b == GetCoordsSoutheastOf(a.Q, a.R);
+
+        return isNorthOf ||
+            isNorthwestOf ||
+            isNortheastOf ||
+            isSouthOf ||
+            isSouthwestOf ||
+            isSoutheastOf;
     }
 
     bool IsValidCoord(int q, int r)

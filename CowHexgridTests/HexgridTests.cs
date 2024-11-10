@@ -171,6 +171,28 @@ public class HexgridTests
             [2, 1, null],
         ];
     }
+
+    [Theory]
+    [InlineData(1, 0, 0, 0, true)]
+    [InlineData(1, 0, 0, 1, true)]
+    [InlineData(1, 0, 1, 1, true)]
+    [InlineData(1, 0, 2, 0, true)]
+    [InlineData(1, 0, 2, 1, true)]
+    [InlineData(1, 1, 1, 0, true)]
+    [InlineData(0, 0, 0, 0, false)]
+    [InlineData(0, 0, 2, 0, false)]
+    [InlineData(1, 1, 0, 0, false)]
+    [InlineData(-1, 0, 0, 0, false)]
+    public void TestAreNeighbors(int q1, int r1, int q2, int r2, bool expected)
+    {
+        var a = new Coords(q1, r1);
+        var b = new Coords(q2, r2);
+        var hexgrid = Given.ANewHexgrid();
+
+        var result = hexgrid.AreNeighbors(a, b);
+
+        Assert.Equal(expected, result);
+    }
 }
 
 static class Given
