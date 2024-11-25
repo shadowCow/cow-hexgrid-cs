@@ -4,9 +4,9 @@ namespace CowHexgrid;
 // odd-q vertical layout
 public class Hexgrid<T> where T : class
 {
-    private int numCols;
-    private int numRows;
-    private Slot<T>[] grid;
+    private readonly int numCols;
+    private readonly int numRows;
+    private readonly Slot<T>[] grid;
 
     public Hexgrid(int numCols, int numRows)
     {
@@ -15,6 +15,30 @@ public class Hexgrid<T> where T : class
         grid = new Slot<T>[numCols*numRows];
 
         Array.Fill(grid, new Slot<T>.Empty());
+    }
+
+    public int GetNumColumns()
+    {
+        return numCols;
+    }
+
+    public int GetNumRows()
+    {
+        return numRows;
+    }
+
+    public IEnumerable<Coords> EnumerateCoordsByColumn()
+    {
+        return Enumerable.Range(0, numCols)
+            .SelectMany(q => Enumerable.Range(0, numRows)
+                .Select(r => new Coords(q, r)));
+    }
+
+    public IEnumerable<Coords> EnumerateCoordsByRow()
+    {
+        return Enumerable.Range(0, numRows)
+            .SelectMany(r => Enumerable.Range(0, numCols)
+                .Select(q => new Coords(q, r)));
     }
 
     public void SetTileAt(int q, int r, T tile)

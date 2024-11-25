@@ -5,6 +5,64 @@ namespace CowHexgridTests;
 public class HexgridTests
 {
     [Fact]
+    public void GetNumColumns()
+    {
+        const int numCols = 6;
+        var hexgrid = Given.ANewHexgridWithSize(numCols, 5);
+
+        var actual = hexgrid.GetNumColumns();
+
+        Assert.Equal(numCols, actual);
+    }
+
+    [Fact]
+    public void GetNumRows()
+    {
+        const int numRows = 5;
+        var hexgrid = Given.ANewHexgridWithSize(6, numRows);
+
+        var actual = hexgrid.GetNumRows();
+
+        Assert.Equal(numRows, actual);
+    }
+
+    [Fact]
+    public void EnumerateCoordsByColumn()
+    {
+        var hexgrid = Given.ANewHexgridWithSize(3, 2);
+
+        var actual = hexgrid.EnumerateCoordsByColumn();
+
+        IEnumerable<Coords> expected = [
+            new Coords(0, 0),
+            new Coords(0, 1),
+            new Coords(1, 0),
+            new Coords(1, 1),
+            new Coords(2, 0),
+            new Coords(2, 1),
+        ];
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void EnumerateCoordsByRow()
+    {
+        var hexgrid = Given.ANewHexgridWithSize(3, 2);
+
+        var actual = hexgrid.EnumerateCoordsByRow();
+
+        IEnumerable<Coords> expected = [
+            new Coords(0, 0),
+            new Coords(1, 0),
+            new Coords(2, 0),
+            new Coords(0, 1),
+            new Coords(1, 1),
+            new Coords(2, 1),
+        ];
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
     public void GetTileAt()
     {
         var hexgrid = Given.ANewHexgrid();
@@ -201,10 +259,15 @@ static class Given
     const int R = 2;
     internal static Hexgrid<Coords> ANewHexgrid()
     {
-        var grid = new Hexgrid<Coords>(Q, R);
-        for (int q = 0; q < Q; q++)
+        return ANewHexgridWithSize(Q, R);
+    }
+
+    internal static Hexgrid<Coords> ANewHexgridWithSize(int numCols, int numRows)
+    {
+        var grid = new Hexgrid<Coords>(numCols, numRows);
+        for (int q = 0; q < numCols; q++)
         {
-            for (int r = 0; r < R; r++)
+            for (int r = 0; r < numRows; r++)
             {
                 grid.SetTileAt(q, r, new Coords(q, r));
             }
